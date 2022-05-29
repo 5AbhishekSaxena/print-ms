@@ -20,6 +20,10 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+	// https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
+	implementation("org.apache.pdfbox:pdfbox:3.0.0-RC1")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
