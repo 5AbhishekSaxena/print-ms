@@ -60,7 +60,7 @@ class PrinterServiceImpl : PrinterService {
     private fun getPrinterJob(document: PDDocument, printService: PrintService): PrinterJob {
         val job = PrinterJob.getPrinterJob().apply {
             setPageable(PDFPageable(document))
-            setPrintable(PDFPrintable(document, Scaling.ACTUAL_SIZE))
+            setPrintable(PDFPrintable(document, Scaling.SCALE_TO_FIT))
             this.printService = printService
         } ?: throw Exception("Failed to create printer job.")
 
