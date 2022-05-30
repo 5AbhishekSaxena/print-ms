@@ -11,12 +11,17 @@ import tech.developingdeveloper.printms.services.dtos.PrinterDTO
 import tech.developingdeveloper.printms.services.dtos.factories.PrinterDTOFactory
 import java.awt.print.PrinterJob
 import java.io.File
+import java.net.URI
+import java.util.*
 import javax.print.PrintService
 import javax.print.PrintServiceLookup
+import javax.print.attribute.HashAttributeSet
 import javax.print.attribute.HashPrintRequestAttributeSet
 import javax.print.attribute.standard.Chromaticity
+import javax.print.attribute.standard.JobName
 import javax.print.attribute.standard.MediaSizeName
 import javax.print.attribute.standard.PrinterIsAcceptingJobs
+import javax.print.attribute.standard.PrinterState
 
 @Service
 class PrinterServiceImpl(
@@ -61,7 +66,7 @@ class PrinterServiceImpl(
 
         document.use {
             val job = getPrinterJob(it, printService)
-            val attributes = getJobAttributes()
+            val attributes = buildJobAttributes(file.name)
             //job.print(attributes)
         }
     }
@@ -99,10 +104,12 @@ class PrinterServiceImpl(
         }
     }
 
-    private fun getJobAttributes(): HashPrintRequestAttributeSet {
-        val attributes = HashPrintRequestAttributeSet()
-        attributes.add(Chromaticity.MONOCHROME)
-        attributes.add(MediaSizeName.ISO_A4)
+    private fun buildJobAttributes(fileName: String): HashPrintRequestAttributeSet {
+        val attributes = HashPrintRequestAttributeSet().apply {
+            add(Chromaticity.MONOCHROME)
+            add(MediaSizeName.ISO_A4)
+            add(JobName(fileName, Locale.getDefault()))
+        }
         return attributes
     }
 }
