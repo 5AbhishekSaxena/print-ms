@@ -34,6 +34,8 @@ class PrinterServiceImpl(
 
     override fun getDefaultPrinter(): PrinterDTO {
         val defaultPrinterService = PrintServiceLookup.lookupDefaultPrintService()
+            ?: throw Exception("No default printer found.")
+
         return printerDTOFactory.createPrinter(
             name = defaultPrinterService.name,
             printerIsAcceptingJobsAttribute = defaultPrinterService.getPrinterIsAcceptingJobsAttribute()
