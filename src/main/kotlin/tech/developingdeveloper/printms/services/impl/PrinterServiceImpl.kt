@@ -7,6 +7,8 @@ import org.apache.pdfbox.printing.PDFPrintable
 import org.apache.pdfbox.printing.Scaling
 import org.springframework.stereotype.Service
 import tech.developingdeveloper.printms.services.PrinterService
+import tech.developingdeveloper.printms.services.dtos.PrinterDTO
+import tech.developingdeveloper.printms.services.dtos.factories.PrinterDTOFactory
 import java.awt.print.PrinterJob
 import java.io.File
 import javax.print.PrintService
@@ -14,15 +16,20 @@ import javax.print.PrintServiceLookup
 import javax.print.attribute.HashPrintRequestAttributeSet
 import javax.print.attribute.standard.Chromaticity
 import javax.print.attribute.standard.MediaSizeName
+import javax.print.attribute.standard.PrinterIsAcceptingJobs
 
 @Service
-class PrinterServiceImpl : PrinterService {
-    override fun getAllPrinters() {
+class PrinterServiceImpl(
+    private val printerDTOFactory: PrinterDTOFactory
+) : PrinterService {
+    override fun getAllPrinters(): List<PrinterDTO> {
         val printServices = PrintServiceLookup.lookupPrintServices(null, null)
-        println("Number of print services: " + printServices.size)
-
-        println("List of all printers: ")
-        for (printer in printServices) println("Printer: " + printer.name)
+        return printServices.map {
+            printerDTOFactory.createPrinter(
+                name = it.name,
+                printerIsAcceptingJobsAttribute = it.getAttribute(PrinterIsAcceptingJobs::class.java)
+            )
+        }
     }
 
     override fun getDefaultPrinter() {
@@ -53,7 +60,7 @@ class PrinterServiceImpl : PrinterService {
         document.use {
             val job = getPrinterJob(it, printService)
             val attributes = getJobAttributes()
-            job.print(attributes)
+            //job.print(attributes)
         }
     }
 
