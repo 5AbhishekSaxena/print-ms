@@ -27,25 +27,17 @@ class PrinterServiceImpl(
         return printServices.map {
             printerDTOFactory.createPrinter(
                 name = it.name,
-                printerIsAcceptingJobsAttribute = it.getAttribute(PrinterIsAcceptingJobs::class.java)
+                printerIsAcceptingJobsAttribute = it.getPrinterIsAcceptingJobsAttribute()
             )
         }
     }
 
-    override fun getDefaultPrinter() {
+    override fun getDefaultPrinter(): PrinterDTO {
         val defaultPrinterService = PrintServiceLookup.lookupDefaultPrintService()
-        println("Default Printer: ${defaultPrinterService.name}")
-        printAttributes(defaultPrinterService)
-    }
-
-    override fun findPrinter(printerName: String): PrintService {
-        val printServices = PrintServiceLookup.lookupPrintServices(null, null)
-        val printer = printServices.firstOrNull { it.name == printerName }
-            ?: throw Exception("Printer with name $printerName not found!")
-
-        println("Printer: ${printer.name}")
-
-        return printer
+        return printerDTOFactory.createPrinter(
+            name = defaultPrinterService.name,
+            printerIsAcceptingJobsAttribute = defaultPrinterService.getPrinterIsAcceptingJobsAttribute()
+        )
     }
 
     override fun printPdf(path: String, printerServiceName: String) {
@@ -62,6 +54,13 @@ class PrinterServiceImpl(
             val attributes = getJobAttributes()
             //job.print(attributes)
         }
+    }
+
+    private fun findPrinter(printerName: String): PrintService {
+        val printServices = PrintServiceLookup.lookupPrintServices(null, null)
+
+        return printServices.firstOrNull { it.name == printerName }
+            ?: throw Exception("Printer with name $printerName not found!")
     }
 
     private fun getPrinterJob(document: PDDocument, printService: PrintService): PrinterJob {
@@ -91,3 +90,6 @@ class PrinterServiceImpl(
         return attributes
     }
 }
+
+private fun PrintService.getPrinterIsAcceptingJobsAttribute() =
+    this.getAttribute(PrinterIsAcceptingJobs::class.java)

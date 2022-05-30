@@ -8,9 +8,7 @@ interface PrinterService {
 
     fun getAllPrinters(): List<PrinterDTO>
 
-    fun getDefaultPrinter()
-
-    fun findPrinter(printerName: String): PrintService
+    fun getDefaultPrinter(): PrinterDTO
 
     fun printPdf(path: String, printerServiceName: String)
 }
