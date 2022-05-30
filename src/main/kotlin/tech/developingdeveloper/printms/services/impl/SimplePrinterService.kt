@@ -11,20 +11,17 @@ import tech.developingdeveloper.printms.services.dtos.PrinterDTO
 import tech.developingdeveloper.printms.services.dtos.factories.PrinterDTOFactory
 import java.awt.print.PrinterJob
 import java.io.File
-import java.net.URI
 import java.util.*
 import javax.print.PrintService
 import javax.print.PrintServiceLookup
-import javax.print.attribute.HashAttributeSet
 import javax.print.attribute.HashPrintRequestAttributeSet
 import javax.print.attribute.standard.Chromaticity
 import javax.print.attribute.standard.JobName
 import javax.print.attribute.standard.MediaSizeName
 import javax.print.attribute.standard.PrinterIsAcceptingJobs
-import javax.print.attribute.standard.PrinterState
 
 @Service
-class PrinterServiceImpl(
+class SimplePrinterService(
     private val printerDTOFactory: PrinterDTOFactory
 ) : PrinterService {
     override fun getAllPrinters(): List<PrinterDTO> {
