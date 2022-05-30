@@ -1,8 +1,11 @@
 package tech.developingdeveloper.printms.services.dtos
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 
 data class PrinterDTO(
     val name: String,
+    @field:JsonProperty("isAcceptingJobs")
     val isAcceptingJobs: PrinterIsAcceptingJobs
 ) {
     enum class PrinterIsAcceptingJobs {
