@@ -6,9 +6,13 @@ import javax.print.attribute.standard.PrinterIsAcceptingJobs
 
 @Service
 class PrinterDTOFactory {
-    fun createPrinter(name: String, printerIsAcceptingJobsAttribute: PrinterIsAcceptingJobs): PrinterDTO {
+    fun createPrinter(
+        name: String,
+        printerIsAcceptingJobsAttribute: PrinterIsAcceptingJobs,
+        attributes: Map<String, String>
+    ): PrinterDTO {
         val isAcceptingJobs = getIsAcceptingJobs(printerIsAcceptingJobsAttribute)
-        return PrinterDTO(name, isAcceptingJobs)
+        return PrinterDTO(name, isAcceptingJobs, attributes)
     }
 
     private fun getIsAcceptingJobs(printerIsAcceptingJobs: PrinterIsAcceptingJobs): PrinterDTO.PrinterIsAcceptingJobs {

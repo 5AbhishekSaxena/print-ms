@@ -29,7 +29,8 @@ class SimplePrinterService(
         return printServices.map {
             printerDTOFactory.createPrinter(
                 name = it.name,
-                printerIsAcceptingJobsAttribute = it.getPrinterIsAcceptingJobsAttribute()
+                printerIsAcceptingJobsAttribute = it.getPrinterIsAcceptingJobsAttribute(),
+                attributes = getAttributes(it)
             )
         }
     }
@@ -40,7 +41,8 @@ class SimplePrinterService(
 
         return printerDTOFactory.createPrinter(
             name = defaultPrinterService.name,
-            printerIsAcceptingJobsAttribute = defaultPrinterService.getPrinterIsAcceptingJobsAttribute()
+            printerIsAcceptingJobsAttribute = defaultPrinterService.getPrinterIsAcceptingJobsAttribute(),
+            attributes = getAttributes(defaultPrinterService)
         )
     }
 
@@ -48,7 +50,8 @@ class SimplePrinterService(
         val printerService = findPrinter(printerName)
         return printerDTOFactory.createPrinter(
             name = printerService.name,
-            printerIsAcceptingJobsAttribute = printerService.getPrinterIsAcceptingJobsAttribute()
+            printerIsAcceptingJobsAttribute = printerService.getPrinterIsAcceptingJobsAttribute(),
+            attributes = getAttributes(printerService)
         )
     }
 
@@ -89,6 +92,20 @@ class SimplePrinterService(
         val printServices = PrintServiceLookup.lookupPrintServices(null, null)
 
         return printServices.firstOrNull { it.name == printerName } != null
+    }
+
+    private fun getAttributes(printService: PrintService): Map<String, String> {
+        val printServiceAttributeSet = printService.attributes
+
+        val attributes = mutableMapOf<String, String>()
+
+        for (a in printServiceAttributeSet.toArray()) {
+            val name: String = a.name
+            val value: String = printServiceAttributeSet.get(a.javaClass).toString()
+            println("$name(${a.javaClass}) : $value")
+            attributes[name] = value
+        }
+        return attributes
     }
 
     private fun printAttributes(printService: PrintService) {
