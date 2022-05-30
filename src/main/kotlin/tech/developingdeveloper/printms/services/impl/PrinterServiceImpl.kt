@@ -73,6 +73,12 @@ class PrinterServiceImpl(
         return job
     }
 
+    override fun isPrinterPresent(printerName: String): Boolean {
+        val printServices = PrintServiceLookup.lookupPrintServices(null, null)
+
+        return printServices.firstOrNull { it.name == printerName } != null
+    }
+
     private fun printAttributes(printService: PrintService) {
         val attributes = printService.attributes
 

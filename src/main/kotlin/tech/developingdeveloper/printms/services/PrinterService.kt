@@ -10,5 +10,7 @@ interface PrinterService {
 
     fun getDefaultPrinter(): PrinterDTO
 
+    fun isPrinterPresent(printerName: String): Boolean
+
     fun printPdf(path: String, printerServiceName: String)
 }
