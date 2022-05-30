@@ -42,6 +42,14 @@ class PrinterServiceImpl(
         )
     }
 
+    override fun getPrinter(printerName: String): PrinterDTO {
+        val printerService = findPrinter(printerName)
+        return printerDTOFactory.createPrinter(
+            name = printerService.name,
+            printerIsAcceptingJobsAttribute = printerService.getPrinterIsAcceptingJobsAttribute()
+        )
+    }
+
     override fun printPdf(path: String, printerServiceName: String) {
         val file = File(path)
 
