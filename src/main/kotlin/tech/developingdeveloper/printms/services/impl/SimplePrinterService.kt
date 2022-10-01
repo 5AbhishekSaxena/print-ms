@@ -67,7 +67,7 @@ class SimplePrinterService(
         document.use {
             val job = getPrinterJob(it, printService)
             val attributes = buildJobAttributes(file.name)
-            //job.print(attributes)
+            job.print(attributes)
         }
     }
 
