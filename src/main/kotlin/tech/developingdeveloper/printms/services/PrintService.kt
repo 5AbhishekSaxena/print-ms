@@ -1,17 +1,13 @@
 package tech.developingdeveloper.printms.services
 
+import org.springframework.web.multipart.MultipartFile
 import tech.developingdeveloper.printms.entity.Printer
 
 
-interface PrinterService {
+interface PrintService {
 
     fun getAllPrinters(): List<Printer>
-
-    fun getDefaultPrinter(): Printer
-
     fun getPrinter(printerName: String): Printer
+    fun printPdf(files: List<MultipartFile>, printerName: String)
 
-    fun isPrinterPresent(printerName: String): Boolean
-
-    fun printPdf(path: String, printerServiceName: String)
 }
