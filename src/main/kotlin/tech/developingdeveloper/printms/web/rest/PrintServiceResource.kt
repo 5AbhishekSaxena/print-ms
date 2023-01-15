@@ -7,30 +7,25 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import tech.developingdeveloper.printms.services.FileService
-import tech.developingdeveloper.printms.services.PrinterService
 import tech.developingdeveloper.printms.services.dtos.PrinterDTO
+import tech.developingdeveloper.printms.web.rest.facade.PrintServiceFacade
 
 
 @RestController
 class PrintServiceResource(
-    private val printerService: PrinterService,
-    private val fileService: FileService
+    private val printerServiceFacade: PrintServiceFacade
 ) {
 
     @GetMapping("/")
     fun getAllPrinters(): ResponseEntity<List<PrinterDTO>> {
-        val body = printerService.getAllPrinters()
+        val body = printerServiceFacade.getAllPrinters()
         println("body = $body")
         return ResponseEntity.ok(body)
     }
 
     @GetMapping("/{printerName}")
     fun getPrinter(@PathVariable printerName: String): ResponseEntity<PrinterDTO> {
-        val body = if (printerName == "default")
-            printerService.getDefaultPrinter()
-        else
-            printerService.getPrinter(printerName)
+        val body = printerServiceFacade.getPrinter(printerName)
         return ResponseEntity.ok(body)
     }
 
@@ -39,15 +34,6 @@ class PrintServiceResource(
         @RequestParam files: List<MultipartFile>,
         @RequestParam printerName: String
     ) {
-        val filteredFiles = files.filterNot { it.isEmpty }
-
-        if (filteredFiles.isEmpty())
-            throw Exception("Files shouldn't be empty.")
-
-        filteredFiles.forEach { file ->
-            val tempFilePath = fileService.saveFile(file, null)
-            printerService.printPdf(tempFilePath, printerName)
-        }
+        printerServiceFacade.printPdf(files, printerName)
     }
-
 }
