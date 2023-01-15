@@ -25,12 +25,6 @@ class PrintServiceResource(
         return ResponseEntity.ok(body)
     }
 
-//    @GetMapping("/default")
-//    fun getDefaultPrinter(): ResponseEntity<PrinterDTO> {
-//        val body = printerService.getDefaultPrinter()
-//        return ResponseEntity.ok(body)
-//    }
-
     @GetMapping("/{printerName}")
     fun getPrinter(@PathVariable printerName: String): ResponseEntity<PrinterDTO> {
         val body = if (printerName == "default")
