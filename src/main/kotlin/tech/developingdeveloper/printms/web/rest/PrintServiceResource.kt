@@ -25,12 +25,6 @@ class PrintServiceResource(
         return ResponseEntity.ok(body)
     }
 
-//    @GetMapping("/default")
-//    fun getDefaultPrinter(): ResponseEntity<PrinterDTO> {
-//        val body = printerService.getDefaultPrinter()
-//        return ResponseEntity.ok(body)
-//    }
-
     @GetMapping("/{printerName}")
     fun getPrinter(@PathVariable printerName: String): ResponseEntity<PrinterDTO> {
         val body = if (printerName == "default")
@@ -42,11 +36,18 @@ class PrintServiceResource(
 
     @PostMapping("/print")
     fun printPdf(
-        @RequestParam file: MultipartFile,
+        @RequestParam files: List<MultipartFile>,
         @RequestParam printerName: String
     ) {
-        val tempFilePath = fileService.saveFile(file, null)
-        printerService.printPdf(tempFilePath, printerName)
+        val filteredFiles = files.filterNot { it.isEmpty }
+
+        if (filteredFiles.isEmpty())
+            throw Exception("Files shouldn't be empty.")
+
+        filteredFiles.forEach { file ->
+            val tempFilePath = fileService.saveFile(file, null)
+            printerService.printPdf(tempFilePath, printerName)
+        }
     }
 
 }
