@@ -6,9 +6,9 @@ import org.apache.pdfbox.printing.PDFPageable
 import org.apache.pdfbox.printing.PDFPrintable
 import org.apache.pdfbox.printing.Scaling
 import org.springframework.stereotype.Service
+import tech.developingdeveloper.printms.entity.Printer
 import tech.developingdeveloper.printms.services.PrinterService
-import tech.developingdeveloper.printms.services.dtos.PrinterDTO
-import tech.developingdeveloper.printms.services.dtos.factories.PrinterDTOFactory
+import tech.developingdeveloper.printms.services.dtos.factories.PrinterFactory
 import java.awt.print.PrinterJob
 import java.io.File
 import java.util.*
@@ -22,12 +22,12 @@ import javax.print.attribute.standard.PrinterIsAcceptingJobs
 
 @Service
 class SimplePrinterService(
-    private val printerDTOFactory: PrinterDTOFactory
+    private val printerFactory: PrinterFactory
 ) : PrinterService {
-    override fun getAllPrinters(): List<PrinterDTO> {
+    override fun getAllPrinters(): List<Printer> {
         val printServices = PrintServiceLookup.lookupPrintServices(null, null)
         return printServices.map {
-            printerDTOFactory.createPrinter(
+            printerFactory.createPrinter(
                 name = it.name,
                 printerIsAcceptingJobsAttribute = it.getPrinterIsAcceptingJobsAttribute(),
                 attributes = getAttributes(it)
@@ -35,20 +35,22 @@ class SimplePrinterService(
         }
     }
 
-    override fun getDefaultPrinter(): PrinterDTO {
+    override fun getDefaultPrinter(): Printer {
         val defaultPrinterService = PrintServiceLookup.lookupDefaultPrintService()
             ?: throw Exception("No default printer found.")
 
-        return printerDTOFactory.createPrinter(
+        return printerFactory.createPrinter(
             name = defaultPrinterService.name,
             printerIsAcceptingJobsAttribute = defaultPrinterService.getPrinterIsAcceptingJobsAttribute(),
             attributes = getAttributes(defaultPrinterService)
         )
     }
 
-    override fun getPrinter(printerName: String): PrinterDTO {
+    override fun getPrinter(printerName: String): Printer {
+        if (printerName == "default") return getDefaultPrinter()
+
         val printerService = findPrinter(printerName)
-        return printerDTOFactory.createPrinter(
+        return printerFactory.createPrinter(
             name = printerService.name,
             printerIsAcceptingJobsAttribute = printerService.getPrinterIsAcceptingJobsAttribute(),
             attributes = getAttributes(printerService)

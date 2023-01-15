@@ -1,25 +1,26 @@
 package tech.developingdeveloper.printms.services.dtos.factories
 
 import org.springframework.stereotype.Service
-import tech.developingdeveloper.printms.services.dtos.PrinterDTO
+import tech.developingdeveloper.printms.entity.Printer
+import tech.developingdeveloper.printms.entity.enum.PrinterJobAcceptanceStatus
 import javax.print.attribute.standard.PrinterIsAcceptingJobs
 
 @Service
-class PrinterDTOFactory {
+class PrinterFactory {
     fun createPrinter(
         name: String,
         printerIsAcceptingJobsAttribute: PrinterIsAcceptingJobs,
         attributes: Map<String, String>
-    ): PrinterDTO {
+    ): Printer {
         val isAcceptingJobs = getIsAcceptingJobs(printerIsAcceptingJobsAttribute)
-        return PrinterDTO(name, isAcceptingJobs, attributes)
+        return Printer(name, isAcceptingJobs, attributes)
     }
 
-    private fun getIsAcceptingJobs(printerIsAcceptingJobs: PrinterIsAcceptingJobs): PrinterDTO.PrinterIsAcceptingJobs {
+    private fun getIsAcceptingJobs(printerIsAcceptingJobs: PrinterIsAcceptingJobs): PrinterJobAcceptanceStatus {
         val isAcceptingJobs = printerIsAcceptingJobs.value == PrinterIsAcceptingJobs.ACCEPTING_JOBS.value
         return if (isAcceptingJobs)
-            PrinterDTO.PrinterIsAcceptingJobs.ACCEPTING_JOBS
+            PrinterJobAcceptanceStatus.ACCEPTING
         else
-            PrinterDTO.PrinterIsAcceptingJobs.NOT_ACCEPTING_JOBS
+            PrinterJobAcceptanceStatus.NOT_ACCEPTING
     }
 }
