@@ -14,4 +14,8 @@ class PrinterMapper {
             attributes = printer.attributes
         )
     }
+
+    fun mapToDto(printers: List<Printer>): List<PrinterDTO> {
+        return printers.map(::mapToDto)
+    }
 }
