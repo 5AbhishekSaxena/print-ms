@@ -42,11 +42,18 @@ class PrintServiceResource(
 
     @PostMapping("/print")
     fun printPdf(
-        @RequestParam file: MultipartFile,
+        @RequestParam files: List<MultipartFile>,
         @RequestParam printerName: String
     ) {
-        val tempFilePath = fileService.saveFile(file, null)
-        printerService.printPdf(tempFilePath, printerName)
+        val filteredFiles = files.filterNot { it.isEmpty }
+
+        if (filteredFiles.isEmpty())
+            throw Exception("Files shouldn't be empty.")
+
+        filteredFiles.forEach { file ->
+            val tempFilePath = fileService.saveFile(file, null)
+            printerService.printPdf(tempFilePath, printerName)
+        }
     }
 
 }
