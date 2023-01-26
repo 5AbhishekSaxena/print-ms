@@ -2,6 +2,7 @@ package tech.developingdeveloper.printms.services.impl
 
 import com.profesorfalken.wmi4java.WMI4Java
 import com.profesorfalken.wmi4java.WMIClass
+import com.profesorfalken.wmi4java.WMIException
 import org.springframework.stereotype.Service
 import tech.developingdeveloper.printms.entity.enum.PrinterActivityStatus
 import tech.developingdeveloper.printms.services.PrinterActivityStatusService
@@ -23,17 +24,22 @@ class SimplePrinterActivityStatusService : PrinterActivityStatusService {
     }
 
     override fun getPrinterActivityStatus(printerName: String): PrinterActivityStatus {
-        val filter = listOf("\$_.$WMI_PRINTER_NAME_KEY -eq \"$printerName\"")
-        val result = wmi
-            .properties(wmiProperties)
-            .filters(filter)
-            .getWMIObjectList(WMIClass.WIN32_PRINTER)
-            .asSequence()
-            .filterNotNull()
-            .filterPrinterResults()
-            .transformResult()
+        try {
+            val filter = listOf("\$_.$WMI_PRINTER_NAME_KEY -eq \"$printerName\"")
+            val result = wmi
+                .properties(wmiProperties)
+                .filters(filter)
+                .getWMIObjectList(WMIClass.WIN32_PRINTER)
+                .asSequence()
+                .filterNotNull()
+                .filterPrinterResults()
+                .transformResult()
 
-        return result[printerName] ?: PrinterActivityStatus.OFFLINE
+            return result[printerName] ?: PrinterActivityStatus.OFFLINE
+        } catch (exception: WMIException) {
+            val message = "Failed to getActivityStatus for $printerName"
+            throw Exception(message)
+        }
     }
 
     private fun Sequence<Map<String, String>>.filterPrinterResults(): Sequence<Map<String, String>> {
