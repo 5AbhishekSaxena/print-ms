@@ -25,6 +25,7 @@ dependencies {
 	implementation("org.apache.pdfbox:pdfbox:3.0.0-RC1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("com.profesorfalken:WMI4Java:1.6.3")
 }
 
 tasks.withType<KotlinCompile> {

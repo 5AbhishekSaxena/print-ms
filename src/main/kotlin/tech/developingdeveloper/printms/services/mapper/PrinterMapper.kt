@@ -10,6 +10,7 @@ class PrinterMapper {
     fun mapToDto(printer: Printer): PrinterDTO {
         return PrinterDTO(
             name = printer.name,
+            activityStatus = printer.activityStatus,
             jobAcceptanceStatus = printer.jobAcceptanceStatus,
             attributes = printer.attributes
         )
