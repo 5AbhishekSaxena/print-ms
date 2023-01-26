@@ -7,7 +7,9 @@ import org.apache.pdfbox.printing.PDFPrintable
 import org.apache.pdfbox.printing.Scaling
 import org.springframework.stereotype.Service
 import tech.developingdeveloper.printms.entity.Printer
+import tech.developingdeveloper.printms.entity.enum.PrinterActivityStatus
 import tech.developingdeveloper.printms.services.PrinterService
+import tech.developingdeveloper.printms.services.PrinterActivityStatusService
 import tech.developingdeveloper.printms.services.dtos.factories.PrinterFactory
 import java.awt.print.PrinterJob
 import java.io.File
@@ -22,13 +24,18 @@ import javax.print.attribute.standard.PrinterIsAcceptingJobs
 
 @Service
 class SimplePrinterService(
-    private val printerFactory: PrinterFactory
+    private val printerFactory: PrinterFactory,
+    private val printerActivityStatusService: PrinterActivityStatusService,
 ) : PrinterService {
     override fun getAllPrinters(): List<Printer> {
         val printServices = PrintServiceLookup.lookupPrintServices(null, null)
+
+        val printerStatuses = printerActivityStatusService.getPrinterActivityStatus()
+
         return printServices.map {
             printerFactory.createPrinter(
                 name = it.name,
+                activityStatus = printerStatuses[it.name] ?: PrinterActivityStatus.OFFLINE,
                 printerIsAcceptingJobsAttribute = it.getPrinterIsAcceptingJobsAttribute(),
                 attributes = getAttributes(it)
             )
@@ -39,8 +46,12 @@ class SimplePrinterService(
         val defaultPrinterService = PrintServiceLookup.lookupDefaultPrintService()
             ?: throw Exception("No default printer found.")
 
+        val defaultPrinterName = defaultPrinterService.name
+        val printerStatus = printerActivityStatusService.getPrinterActivityStatus(defaultPrinterName)
+
         return printerFactory.createPrinter(
-            name = defaultPrinterService.name,
+            name = defaultPrinterName,
+            activityStatus = printerStatus,
             printerIsAcceptingJobsAttribute = defaultPrinterService.getPrinterIsAcceptingJobsAttribute(),
             attributes = getAttributes(defaultPrinterService)
         )
@@ -50,8 +61,12 @@ class SimplePrinterService(
         if (printerName == "default") return getDefaultPrinter()
 
         val printerService = findPrinter(printerName)
+
+        val printerStatus = printerActivityStatusService.getPrinterActivityStatus(printerName)
+
         return printerFactory.createPrinter(
             name = printerService.name,
+            activityStatus = printerStatus,
             printerIsAcceptingJobsAttribute = printerService.getPrinterIsAcceptingJobsAttribute(),
             attributes = getAttributes(printerService)
         )
