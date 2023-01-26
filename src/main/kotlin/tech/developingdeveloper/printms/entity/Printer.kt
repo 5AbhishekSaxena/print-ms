@@ -1,11 +1,13 @@
 package tech.developingdeveloper.printms.entity
 
 import tech.developingdeveloper.printms.entity.enum.PrinterJobAcceptanceStatus
+import tech.developingdeveloper.printms.entity.enum.PrinterActivityStatus
 
 
 class Printer(
     val name: String,
     val jobAcceptanceStatus: PrinterJobAcceptanceStatus,
+    val activityStatus: PrinterActivityStatus,
     val attributes: Map<String, String>
 ) {
     override fun equals(other: Any?): Boolean {
@@ -29,8 +31,7 @@ class Printer(
     }
 
     override fun toString(): String {
-        return "Printer(name='$name', acceptingJobStatus=$jobAcceptanceStatus, attributes=$attributes)"
+        return "Printer(name='$name', jobAcceptanceStatus=$jobAcceptanceStatus, activityStatus=$activityStatus, attributes=$attributes)"
     }
-
 
 }
