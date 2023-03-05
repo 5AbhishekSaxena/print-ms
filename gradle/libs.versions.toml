@@ -18,3 +18,8 @@ pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
 wmi4java = { module = "com.profesorfalken:WMI4Java", version.ref = "wmi4java" }
 
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot"}
+kotlin-lang = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin"}
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin"}

@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
+@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
-	id("org.springframework.boot") version "2.7.0"
-	kotlin("jvm") version "1.6.21"
-	kotlin("plugin.spring") version "1.6.21"
+	alias(libs.plugins.spring.boot)
+	alias(libs.plugins.kotlin.lang)
+	alias(libs.plugins.kotlin.spring)
 }
 
 group = "tech.developingdeveloper"
