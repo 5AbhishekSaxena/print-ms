@@ -1,0 +1,20 @@
+[versions]
+spring-boot = "2.7.0"
+kotlin = "1.6.21"
+
+# https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
+pdfbox = "3.0.0-RC1"
+
+#https://github.com/profesorfalken/WMI4Java/releases
+wmi4java = "1.6.3"
+
+[libraries]
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin"}
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect"}
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8"}
+
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
+wmi4java = { module = "com.profesorfalken:WMI4Java", version.ref = "wmi4java" }
+
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
