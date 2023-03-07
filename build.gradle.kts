@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
+@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
-	id("org.springframework.boot") version "2.7.0"
-	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	kotlin("jvm") version "1.6.21"
-	kotlin("plugin.spring") version "1.6.21"
+	alias(libs.plugins.spring.boot)
+	alias(libs.plugins.kotlin.lang)
+	alias(libs.plugins.kotlin.spring)
 }
 
 group = "tech.developingdeveloper"
@@ -16,16 +17,16 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation(platform(SpringBootPlugin.BOM_COORDINATES))
+	implementation(libs.spring.boot.starter.web)
+	implementation(libs.jackson.kotlin)
+	implementation(libs.kotlin.reflect)
+	implementation(libs.kotlin.stdlib)
 
-	// https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
-	implementation("org.apache.pdfbox:pdfbox:3.0.0-RC1")
+	implementation(libs.pdfbox)
+	implementation(libs.wmi4java)
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	implementation("com.profesorfalken:WMI4Java:1.6.3")
+	testImplementation(libs.spring.boot.starter.test)
 }
 
 tasks.withType<KotlinCompile> {
